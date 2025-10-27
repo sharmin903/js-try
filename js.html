@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: rgb(133, 133, 241);
+            text-align: center;
+            padding-top: 200px;
+        }
+
+        .container {
+            background-color: white;
+            width: 900px;
+            height: 300px;
+            margin: auto;
+            padding: 50px;
+            border-radius: 10px;
+        }
+
+        #textInput {
+            width: 300px;
+            height: 20px;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #addBtn {
+            padding: 4px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            padding: 0;
+            text-align: left;
+            padding: 20px 0 0 110px;
+        }
+
+        li {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>My to-do list</h1>
+        <input id="textInput" type="text" placeholder="Add task here....">
+        <button id="addBtn">Add</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        const input = document.getElementById('textInput');
+        const addBtn = document.getElementById('addBtn');
+        const tasklist = document.getElementById('taskList');
+        window.addEventListener('DOMContentLoaded', loadTasks);
+        addBtn.addEventListener('click', () => {
+            const task = input.value.trim();
+            if (task === '') return;
+            addTask(task);
+            saveTask(task);
+            input.value = '';
+        })
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addBtn.click();
+            }
+        });
+        function addTask(taskText) {
+            const li = document.createElement('li');
+            li.textContent = taskText;
+            tasklist.appendChild(li);
+        }
+        function saveTask(taskText) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(taskText);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        function loadTasks() {
+            try {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                tasks.forEach(task => addTask(task));
+            }
+            catch (error) {
+                console.error('Error loading tasks:', error);
+                localStorage.removeItem('tasks');
+            }
+        }
+    </script>
+</body>
+
+</html>
