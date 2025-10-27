@@ -45,6 +45,22 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        li.completed{
+            text-decoration: line-through;
+            color: gray;
+            opacity: 0.7;
+        }
+        .deletBtn{
+            background-color: crimson;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .deletBtn:hover{
+            background-color: gray;
+        }
     </style>
     <title>Document</title>
 </head>
@@ -74,9 +90,15 @@
                 addBtn.click();
             }
         });
-        function addTask(taskText) {
+        function addTask(taskText,completed=false) {
             const li = document.createElement('li');
             li.textContent = taskText;
+            if(completed)li.classList.add('completed');
+            list.addEventListener('click',()=>{
+                li.classList.toggle('completed');
+                updateStorage();
+            })
+            li.appendChild(delBtn)
             tasklist.appendChild(li);
         }
         function saveTask(taskText) {
