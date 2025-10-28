@@ -50,7 +50,7 @@
             color: gray;
             opacity: 0.7;
         }
-        .deletBtn{
+        .delete-btn{
             background-color: crimson;
             color: white;
             border: none;
@@ -58,7 +58,7 @@
             padding: 5px 10px;
             cursor: pointer;
         }
-        .deletBtn:hover{
+        .delete-btn:hover{
             background-color: gray;
         }
     </style>
@@ -82,7 +82,7 @@
             const task = input.value.trim();
             if (task === '') return;
             addTask(task);
-            saveTask(task);
+            updateStorage();
             input.value = '';
         })
         input.addEventListener('keypress', (e) => {
@@ -90,32 +90,34 @@
                 addBtn.click();
             }
         });
-        function addTask(taskText,completed=false) {
+        function addTask(taskText, completed=false) {
             const li = document.createElement('li');
-            li.textContent = taskText;
+            const taskSpan=document.createElement('span');
+            taskSpan.textContent = taskText;
             if(completed)li.classList.add('completed');
-            list.addEventListener('click',()=>{
+            li.addEventListener('click',()=>{
                 li.classList.toggle('completed');
                 updateStorage();
             })
-            li.appendChild(delBtn)
+            const delBtn=document.createElement('button');
+            delBtn.textContent='Delete';
+            delBtn.classList.add('delete-btn')
+            delBtn.addEventListener('click',(e)=>{
+                e.stopPropagation();
+                li.remove();
+                updateStorage();
+            })
+            li.appendChild(taskSpan);
+            li.appendChild(delBtn);
             tasklist.appendChild(li);
         }
-        function saveTask(taskText) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks.push(taskText);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-        function loadTasks() {
-            try {
-                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                tasks.forEach(task => addTask(task));
-            }
-            catch (error) {
-                console.error('Error loading tasks:', error);
-                localStorage.removeItem('tasks');
-            }
-        }
+        function updateStorage(){
+            const tasks=[];
+            tasklist.querySelectorAll('li').forEach(li=>{const taskText=li.querySelector('span').textContent,tasks.push({text:taskText, completed:li.classList.contains('completed')
+
+            });
+        })
+        }      
     </script>
 </body>
 
