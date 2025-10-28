@@ -106,18 +106,29 @@
                 e.stopPropagation();
                 li.remove();
                 updateStorage();
-            })
+            });
             li.appendChild(taskSpan);
             li.appendChild(delBtn);
             tasklist.appendChild(li);
         }
         function updateStorage(){
             const tasks=[];
-            tasklist.querySelectorAll('li').forEach(li=>{const taskText=li.querySelector('span').textContent,tasks.push({text:taskText, completed:li.classList.contains('completed')
+            tasklist.querySelectorAll('li').forEach(li=>{
+                const taskText=li.querySelector('span').textContent;
+                tasks.push({
+                    text:taskText,
+                     completed:li.classList.contains('completed')
 
             });
-        })
-        }      
+        });
+        window.taskData=tasks;
+    }    
+    function loadTasks(){
+        const tasks=window.taskData||[];
+        tasks.forEach(task=>{
+            addTask(task.text,task.completed);
+        });
+    } 
     </script>
 </body>
 
